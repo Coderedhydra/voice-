@@ -1,0 +1,18 @@
+[Unit]
+Description=Live Interview Assistant Backend
+After=network.target ollama.service
+Wants=ollama.service
+
+[Service]
+Type=simple
+User=www-data
+Group=www-data
+WorkingDirectory=/opt/voice-assistant/backend
+Environment="PATH=/opt/voice-assistant/backend/venv/bin"
+EnvironmentFile=/opt/voice-assistant/backend/.env
+ExecStart=/opt/voice-assistant/backend/venv/bin/gunicorn --workers 4 --bind 0.0.0.0:5000 --timeout 120 app:app
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

@@ -49,6 +49,25 @@ try:
         logger.warning(f"⚠️  Model '{MODEL_NAME}' not found. Run: ollama pull {MODEL_NAME}")
     else:
         logger.info(f"✓ Model '{MODEL_NAME}' is ready!")
+
+@app.route("/", methods=["GET"])
+def index():
+    """API information endpoint"""
+    return jsonify({
+        "service": "Live Interview Assistant API",
+        "version": "1.0.0",
+        "status": "running",
+        "model": MODEL_NAME,
+        "endpoints": {
+            "GET /": "API information (this page)",
+            "GET /health": "Health check endpoint",
+            "POST /ask": "Ask a question (requires JSON body with 'text' field)"
+        },
+        "example_usage": {
+            "health_check": "curl http://localhost:5000/health",
+            "ask_question": "curl -X POST http://localhost:5000/ask -H 'Content-Type: application/json' -d '{\"text\":\"What is Python?\"}'"
+        }
+    }), 200
 except Exception as e:
     logger.error(f"✗ Failed to connect to Ollama: {e}")
     logger.error("Please ensure Ollama is running: 'sudo systemctl start ollama' or 'ollama serve'")

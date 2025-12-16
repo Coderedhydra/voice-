@@ -49,6 +49,9 @@ try:
         logger.warning(f"⚠️  Model '{MODEL_NAME}' not found. Run: ollama pull {MODEL_NAME}")
     else:
         logger.info(f"✓ Model '{MODEL_NAME}' is ready!")
+except Exception as e:
+    logger.error(f"✗ Failed to connect to Ollama: {e}")
+    logger.error("Please ensure Ollama is running: 'sudo systemctl start ollama' or 'ollama serve'")
 
 @app.route("/", methods=["GET"])
 def index():
@@ -68,9 +71,6 @@ def index():
             "ask_question": "curl -X POST http://localhost:5000/ask -H 'Content-Type: application/json' -d '{\"text\":\"What is Python?\"}'"
         }
     }), 200
-except Exception as e:
-    logger.error(f"✗ Failed to connect to Ollama: {e}")
-    logger.error("Please ensure Ollama is running: 'sudo systemctl start ollama' or 'ollama serve'")
 
 @app.route("/health", methods=["GET"])
 def health():
